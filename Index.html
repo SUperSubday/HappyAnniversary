@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ultimate Love Upgrade 💖</title>
+    <style>
+        :root {
+            /* Funny Theme Colors */
+            --funny-bg: #ffbe0b;
+            --funny-accent: #fb5607;
+            --funny-text: #3a86ff;
+            
+            /* Romantic Theme Colors (Activated later) */
+            --rom-bg: #0b090a;
+            --rom-gold: #d4af37;
+            --rom-primary: #bc4749;
+            --text-light: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background 1.5s ease, color 1.5s ease, font-family 1.5s ease;
+        }
+
+        body {
+            background: var(--funny-bg);
+            color: #000;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        /* --- Theme Switcher Class --- */
+        body.romantic-mode {
+            background: var(--rom-bg);
+            background: radial-gradient(circle at center, #1b1b1b 0%, #000000 100%);
+            color: var(--text-light);
+            font-family: 'Georgia', serif;
+        }
+
+        /* --- Music Container (Hidden) --- */
+        #music-container {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* --- Animations --- */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .sparkle {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* --- Layout --- */
+        section {
+            width: 100%;
+            max-width: 600px;
+            min-height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .active-section { display: flex; animation: fadeIn 1s ease-in-out; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 4px solid #000;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 10px 10px 0px #000;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Romantic Card Override */
+        .romantic-mode .card {
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 2px;
+            box-shadow: 0 0 40px rgba(0,0,0,1);
+            color: var(--text-light);
+        }
+
+        /* --- T&C Styling --- */
+        .tc-container {
+            margin: 1.5rem 0;
+            padding: 10px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .tc-container input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .tc-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* --- Game Grid --- */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 2rem 0;
+        }
+        .grid-item {
+            height: 70px;
+            background: var(--funny-text);
+            border: 3px solid #000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border-radius: 10px;
+        }
+        .grid-item.flipped { background: #fff; }
+        .grid-item.matched { visibility: hidden; }
+
+        /* --- Photos & Poems --- */
+        .photo-frame {
+            width: 100%;
+            aspect-ratio: 4/5;
+            background: #1a1a1a;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--rom-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        .poem-box {
+            font-style: italic;
+            white-space: pre-line;
+            line-height: 2.2;
+            margin: 2rem 0;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 2rem 0;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            background: var(--funny-accent);
+            color: #fff;
+            border: 3px solid #000;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 4px 4px 0px #000;
+            text-transform: uppercase;
+        }
+        .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #000; }
+        .btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000; }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .romantic-mode .btn {
+            background: transparent;
+            color: var(--rom-gold);
+            border: 1px solid var(--rom-gold);
+            box-shadow: none;
+            border-radius: 0;
+            letter-spacing: 2px;
+        }
+        .romantic-mode .btn:hover { background: var(--rom-gold); color: #000; }
+
+        .funny-title { color: var(--funny-accent); font-size: 2.5rem; margin-bottom: 1rem; }
+        .romantic-mode .funny-title { color: var(--rom-gold); font-size: 1.8rem; letter-spacing: 4px; }
+
+        @media (max-width: 480px) {
+            .card { padding: 1.5rem; }
+            .funny-title { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- YouTube Music Background -->
+    <div id="music-container">
+        <div id="player"></div>
+    </div>
+
+    <!-- 1: FUNNY ENTRANCE -->
+    <section id="section-1" class="active-section">
+        <div class="card">
+            <h1 class="funny-title">⚠️ WARNING!</h1>
+            <p style="font-size: 1.2rem; font-weight: bold;">Excessive Cuteness Ahead.</p>
+            <p>
+                You are about to enter the digital archive of the world's most chaotic couple. 
+                Proceedings involve bad jokes, blanket theft reports, and 100% pure drama.
+            </p>
+            
+            <!-- Mandatory T&C -->
+            <label class="tc-container">
+                <input type="checkbox" id="tc-check" onchange="toggleProceed()">
+                <span class="tc-label">I agree that I am officially the cutest and prettiest person alive. ✨</span>
+            </label>
+
+            <button class="btn" id="start-btn" onclick="startExperience()" disabled>Let's Go! 🏃‍♂️</button>
+            <p style="font-size: 0.7rem; margin-top: 10px; opacity: 0.7;">*Agreement is legally binding and non-refundable.</p>
+        </div>
+    </section>
+
+    <!-- 2: FUNNY TIMELINE -->
+    <section id="section-2">
+        <div class="card">
+            <h1 class="funny-title">The "Chaos" History</h1>
+            <div style="text-align: left; line-height: 1.6;">
+                <p><strong>Step 1: The Trap 🪤The first time I saw you , college ko tyo gallery ma I seriously thought how lucky was the one whom you liked .(WAS JEALOUS FR!!)</strong><br></p><br>
+                <p><strong>Step 2: The Cringe Zone 🤡</strong><br>Remember DADA BAINI ani TAPAI TIMI wala relation?</p><br>
+                <p><strong>Step 3: The Realization 😲</strong><br>"Oh no, I actually like this weirdo." - You, probably, everyday.</p>
+            </div>
+            <button class="btn" onclick="nextSection(3)">Compatibility Test 🧪</button>
+        </div>
+    </section>
+
+    <!-- 3: FUNNY GAME -->
+    <section id="section-3">
+        <div class="card">
+            <h1 class="funny-title">Match the Vibes</h1>
+            <p>If you can't even match these, remember I would be teasing you😂</p>
+            <div class="game-grid" id="game-grid"></div>
+            <p id="game-stat">Score: 0/6</p>
+            <button id="btn-3" class="btn" style="display:none" onclick="switchToRomantic()">Unlock The Truth 🗝️</button>
+        </div>
+    </section>
+
+    <!-- 4: ROMANTIC LETTER & POEM -->
+    <section id="section-4">
+        <div class="card">
+            <h1 class="funny-title">न्यानो माया</h1>
+            <div id="letter-content" style="text-align: left; font-size: 1.1rem; line-height: 2;"></div>
+            
+            <div class="poem-box" id="poem-area">
+                यी आँखामा तिम्रै तस्बिर सजाएको धेरै भयो, यो मुटुले तिम्रै नाम रोजेको धेरै भयो ।
+
+सप्तरङ्गी इन्द्रेणीझैँ खुसी छायो जीवनमा, तिमीसँग पिरतीको साइनो गाँसेको धेरै भयो ।
+
+जति हेर्यो उति राम्रो लाग्छ तिम्रो मुस्कान, यही रूपको नशामा म मात्तिएको धेरै भयो ।
+
+जुनी-जुनी सँगै चल्ने वाचा कसम खाएर, हामीले यो मायाको संसार रचेको धेरै भयो ।
+
+आज फेरि सम्झिँदै छु त्यो पहिलो भेट हाम्रो, तिमी मेरो भाग्य बनि आएको धेरै भयो ।
+            </div>
+
+            <button class="btn" onclick="nextSection(5)">Our Moment 🖼️</button>
+        </div>
+    </section>
+
+    <!-- 5: ROMANTIC PHOTO & FINALE -->
+    <section id="section-5">
+        <div class="card">
+            <h1 class="funny-title">Us.</h1>
+            <div class="photo-frame">
+                <!-- PHOTO OF YOU TWO -->
+                <img src="IMG_0606.JPG" alt="Anniversary Photo">
+            </div>
+
+            <p style="font-size: 1.3rem; color: var(--rom-gold); font-weight: bold;">Happy Anniversary Sana</p>
+            <p>
+                I promise to keep stealing your blankets, making you laugh, and loving you more every day.Talai taha nai xa how much do I love you 
+                ani remember yo kura ki I will love you the same jaba samma ma xu , ma sangai tah pani xes ,merai najik , merai samipya ma . 
+                With another year together cant wait more to annoy you, tease you ani share those moments with you. I love you so much, and I am so grateful to have you in my life. 
+                Happy Anniversary, Maya. ❤️
+            </p>
+            <div style="font-size: 2.5rem; margin-top: 1rem;">♾️</div>
+        </div>
+    </section>
+
+    <script>
+        const ROMANTIC_MSG = "Life ma dherai paye , ajhai dherai gumaye sayad . Kehi garna sakxu sakdina taha xaina tara even if I die today ma khusi hunxu ki you were by my side ani yesari ki nobody else could ever be . Talai tah bhannu bhanda pani ma nai bhaney hunxa,you are that close that important to me . I love you fucchi ❤️";
+
+        // YouTube Player Logic
+        let player;
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: '2BH9Fok3EX8', // Extracted from your YouTube embed
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': '2BH9Fok3EX8'
+                }
+            });
+        }
+
+        function toggleProceed() {
+            const isChecked = document.getElementById('tc-check').checked;
+            document.getElementById('start-btn').disabled = !isChecked;
+        }
+
+        function startExperience() {
+            // Player starts playing after interaction
+            if (player && player.playVideo) {
+                player.playVideo();
+            }
+            nextSection(2);
+        }
+
+        function nextSection(num) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(`section-${num}`).classList.add('active-section');
+            window.scrollTo(0,0);
+            
+            if(num === 3) initGame();
+            if(num === 4) startTypewriter();
+        }
+
+        function switchToRomantic() {
+            document.body.classList.add('romantic-mode');
+            nextSection(4);
+            triggerFinaleEffect();
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            const isRomantic = document.body.classList.contains('romantic-mode');
+            if (Math.random() > 0.85) {
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                s.innerHTML = isRomantic ? '✨' : '🤪';
+                s.style.left = e.pageX + 'px';
+                s.style.top = e.pageY + 'px';
+                document.body.appendChild(s);
+                setTimeout(() => {
+                    s.style.transform = 'translateY(20px) scale(0)';
+                    s.style.opacity = '0';
+                    setTimeout(() => s.remove(), 1000);
+                }, 200);
+            }
+        });
+
+        function initGame() {
+            const symbols = ['🍔','🍕','🤪','🧸','🍦','💩','🍔','🍕','🤪','🧸','🍦','💩'];
+            const grid = document.getElementById('game-grid');
+            grid.innerHTML = '';
+            let flipped = [];
+            let matches = 0;
+
+            symbols.sort(() => Math.random() - 0.5).forEach((sym) => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.dataset.val = sym;
+                item.onclick = () => {
+                    if(item.classList.contains('flipped') || flipped.length === 2) return;
+                    item.classList.add('flipped');
+                    item.innerText = sym;
+                    flipped.push(item);
+
+                    if(flipped.length === 2) {
+                        if(flipped[0].dataset.val === flipped[1].dataset.val) {
+                            setTimeout(() => {
+                                flipped.forEach(c => c.classList.add('matched'));
+                                flipped = [];
+                                matches++;
+                                document.getElementById('game-stat').innerText = `Score: ${matches}/6`;
+                                if(matches === 6) document.getElementById('btn-3').style.display = 'block';
+                            }, 500);
+                        } else {
+                            setTimeout(() => {
+                                flipped.forEach(c => {
+                                    c.classList.remove('flipped');
+                                    c.innerText = '';
+                                });
+                                flipped = [];
+                            }, 800);
+                        }
+                    }
+                };
+                grid.appendChild(item);
+            });
+        }
+
+        function startTypewriter() {
+            const container = document.getElementById('letter-content');
+            if (container.innerHTML !== '') return;
+            let i = 0;
+            function type() {
+                if(i < ROMANTIC_MSG.length) {
+                    container.innerHTML += ROMANTIC_MSG.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                }
+            }
+            type();
+        }
+
+        function triggerFinaleEffect() {
+            const icons = ['✨', '🌹', '💖'];
+            for(let i=0; i<30; i++) {
+                setTimeout(() => {
+                    const leaf = document.createElement('div');
+                    leaf.style.position = 'fixed';
+                    leaf.style.left = Math.random() * 100 + 'vw';
+                    leaf.style.bottom = '-50px';
+                    leaf.style.fontSize = '20px';
+                    leaf.innerHTML = icons[Math.floor(Math.random()*icons.length)];
+                    leaf.style.transition = 'all 5s linear';
+                    leaf.style.zIndex = '9999';
+                    document.body.appendChild(leaf);
+                    setTimeout(() => {
+                        leaf.style.transform = 'translateY(-110vh) rotate(360deg)';
+                        leaf.style.opacity = '0';
+                    }, 100);
+                    setTimeout(() => leaf.remove(), 6000);
+                }, i * 150);
+            }
+        }
+    </script>
+</body>
+</html>
